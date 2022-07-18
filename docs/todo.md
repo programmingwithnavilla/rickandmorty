@@ -5,7 +5,9 @@
 - [ ]  folder structure
 - [ ]  add bootstrap
 - [ ]  error boundries
-- [ ]  routing
+- [*]  routing
+- [ ]  lazyloading
+- [ ]  dynamic import
 - [ ]  add scss
 - [ ]  env file
 - [ ]  Code spilitng
@@ -22,5 +24,5 @@
 - [ ] implement the action to change the order of todos (drag and drop)
 
 ## Other versions
-- [ ] use Redux
-- [ ] use LocalStorage
+- [ ] Advance Topics
+- 
