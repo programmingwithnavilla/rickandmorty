@@ -8,6 +8,7 @@
 - [ ]  routing
 - [ ]  add scss
 - [ ]  env file
+- [ ]  Code spilitng
 - [ ]  state management
 - [ ]  Testing
 - [x]  Source Maps
