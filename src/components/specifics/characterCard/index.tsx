@@ -40,7 +40,7 @@ const CharacterCard = ({
         <div className="col-8 px-2 d-flex flex-column">
           <div>{name}</div>
           <div className="text-muted">
-            <span>{status} - </span>
+            <span>{species} - </span>
             <span>{gender} - </span>
             <span>{status} </span>
           </div>

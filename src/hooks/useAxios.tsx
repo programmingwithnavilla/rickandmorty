@@ -12,7 +12,6 @@ const useAxios = ({
   headers = null,
   cookie,
 }: IUseAxios) => {
-  console.log("use hooks");
   const [response, setResponse] = useState(null);
   const [error, setError] = useState("");
   const [loading, setloading] = useState(true);

@@ -17,7 +17,6 @@ import {
 import { RootState } from "../store/index";
 export const getServerSideProps = async () => {
   let result = null;
-  // https://rickandmortyapi.com/api/character/?page=1&name=&status=&gender=&species
   await ApiCall({
     url: "character/?page=1&name=&status=&gender=&species",
   })
@@ -25,9 +24,6 @@ export const getServerSideProps = async () => {
       result = res;
     })
     .catch((err) => console.log("apo call", err));
-  // const res = await fetch("https://rickandmortyapi.com/api/character");
-  // const character: any = await res.json();
-
   return {
     props: {
       characters: result,

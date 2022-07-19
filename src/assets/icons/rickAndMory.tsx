@@ -7,7 +7,6 @@ const RickAndMorty = () => (
     id="Layer_1"
     x="0px"
     y="0px"
-    width="120px"
     height="60px"
     viewBox="0 0 1000 293.064"
     enableBackground={"new 0 0 1000 293.064"}
