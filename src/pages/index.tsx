@@ -1,10 +1,18 @@
 import type { NextPage } from "next";
+import { useState } from "react";
 import Link from "next/link";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import withLoading from "../Hoc/Loading";
-
+import { useDispatch } from "react-redux";
+import { useAppSelector, useAppDispatch } from "../hooks/redux-hooks";
+import {
+  setCharacter,
+  clearCharacter,
+  selectCharacter,
+} from "../store/features/charactersSlice";
+import { RootState } from "../store/index";
 export const getServerSideProps = async () => {
   const res = await fetch("https://rickandmortyapi.com/api/character");
   const character: any = await res.json();
@@ -15,7 +23,11 @@ export const getServerSideProps = async () => {
   };
 };
 const Home: NextPage = (props) => {
-  console.log("---props---", props);
+  const { character }: any = props;
+  const dispatch = useAppDispatch();
+  const characters: any = useAppSelector(selectCharacter);
+  const [name, setName] = useState("a");
+  console.log("characters", characters);
   return (
     <div className={styles.container}>
       <Head>
@@ -26,6 +38,8 @@ const Home: NextPage = (props) => {
 
       <main className={styles.main}>
         <div>
+          {name}
+          {characters && characters.name ? characters.name : "Hello Guest"}
           <div>
             <Link href="/characters">
               <a>characters</a>
@@ -49,6 +63,17 @@ const Home: NextPage = (props) => {
           <div>
             <Link href="/characters/test">Go to pages/characters/[id]</Link>
           </div>
+          <button
+            onClick={() => {
+              dispatch(setCharacter(character.results[0]));
+              setName("ali");
+            }}
+          >
+            set value
+          </button>
+          <button onClick={() => dispatch(clearCharacter())}>
+            clear value
+          </button>
         </div>
       </main>
     </div>

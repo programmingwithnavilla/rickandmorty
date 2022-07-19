@@ -47,6 +47,7 @@ export default withLoading;
 //       <Component {...props} setLoading={setloadingState} />
 //     );
 //   }
+//   return HOC
 // };
 // Our withLoading HOC can also be rewritten to return a function component rather than a class:
 
