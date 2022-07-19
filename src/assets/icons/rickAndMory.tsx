@@ -10,7 +10,7 @@ const RickAndMorty = () => (
     width="120px"
     height="60px"
     viewBox="0 0 1000 293.064"
-    enable-background="new 0 0 1000 293.064"
+    enableBackground={"new 0 0 1000 293.064"}
   >
     <g>
       <path

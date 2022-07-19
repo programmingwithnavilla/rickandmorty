@@ -7,26 +7,37 @@ import styles from "../styles/Home.module.css";
 import withLoading from "../Hoc/Loading";
 import { useDispatch } from "react-redux";
 import { useAppSelector, useAppDispatch } from "../hooks/redux-hooks";
+import ApiCall from "../infrastructure/services/axios";
+import CharacterCard from "../components/specifics/characterCard";
 import {
   setCharacter,
   clearCharacter,
   selectCharacter,
 } from "../store/features/charactersSlice";
 import { RootState } from "../store/index";
-// export const getServerSideProps = async () => {
-//   console.log("---inja---");
-//   const res = await fetch("https://rickandmortyapi.com/api/character");
-//   const character: any = await res.json();
-//   return {
-//     props: {
-//       character,
-//     },
-//   };
-// };
+export const getServerSideProps = async () => {
+  let result = null;
+  // https://rickandmortyapi.com/api/character/?page=1&name=&status=&gender=&species
+  await ApiCall({
+    url: "character/?page=1&name=&status=&gender=&species",
+  })
+    .then((res) => {
+      result = res;
+    })
+    .catch((err) => console.log("apo call", err));
+  // const res = await fetch("https://rickandmortyapi.com/api/character");
+  // const character: any = await res.json();
+
+  return {
+    props: {
+      characters: result,
+    },
+  };
+};
 const Home: NextPage = (props) => {
-  const { character }: any = props;
+  const { characters }: any = props;
   const dispatch = useAppDispatch();
-  const characters: any = useAppSelector(selectCharacter);
+  const test: any = useAppSelector(selectCharacter);
   const [name, setName] = useState("a");
   console.log("characters", characters);
   return (
@@ -37,10 +48,9 @@ const Home: NextPage = (props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <div>
-          {name}
-          {characters && characters.name ? characters.name : "Hello Guest"}
+      <main className="col d-flex">
+        {/* {name}
+          {test && test.name ? test.name : "Hello Guest"}
           <div>
             <Link href="/characters">
               <a>characters</a>
@@ -63,18 +73,17 @@ const Home: NextPage = (props) => {
           </div>
           <div>
             <Link href="/characters/test">Go to pages/characters/[id]</Link>
-          </div>
-          <button
-            onClick={() => {
-              dispatch(setCharacter(character.results[0]));
-              setName("ali");
-            }}
-          >
-            set value
-          </button>
-          <button onClick={() => dispatch(clearCharacter())}>
-            clear value
-          </button>
+          </div> */}
+        <div className="col-3 border rounded-3 my-2">A</div>
+        <div className="col-9 d-flex justify-content-center flex-wrap">
+          {characters?.results?.map((character: any) => (
+            <div
+              className="col-5 d-flex flex-column border rounded-3 m-2 py-2"
+              key={character.id}
+            >
+              <CharacterCard {...character} />
+            </div>
+          ))}
         </div>
       </main>
     </div>
