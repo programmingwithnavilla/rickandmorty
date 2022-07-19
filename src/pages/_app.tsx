@@ -1,12 +1,24 @@
-import "../styles/globals.css";
-import type { AppProps } from "next/app";
 import ErrorBoundary from "../Hoc/ErrorBoundries";
-import { Provider } from "react-redux";
 import store from "../store";
+import Header from "../components/common/header";
+import Sidebar from "../components/common/sidebar";
+import type { AppProps } from "next/app";
+import { Provider } from "react-redux";
+import "bootstrap/dist/css/bootstrap.css";
+import "../styles/globals.css";
+
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
-      <Component {...pageProps} />
+      <div className="d-flex flex-column">
+        <div>
+          <Header />
+        </div>
+        <div className="col d-flex">
+          <Sidebar />
+          <Component {...pageProps} />
+        </div>
+      </div>
     </Provider>
   );
 }
