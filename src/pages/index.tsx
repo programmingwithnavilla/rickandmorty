@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
@@ -9,6 +10,7 @@ import { useDispatch } from "react-redux";
 import { useAppSelector, useAppDispatch } from "../hooks/redux-hooks";
 import ApiCall from "../infrastructure/services/axios";
 import CharacterCard from "../components/specifics/characterCard";
+const Dropdown = dynamic(() => import("../components/specifics/dropdown"));
 import {
   setCharacter,
   clearCharacter,
@@ -45,40 +47,34 @@ const Home: NextPage = (props) => {
       </Head>
 
       <main className="col d-flex">
-        {/* {name}
-          {test && test.name ? test.name : "Hello Guest"}
-          <div>
-            <Link href="/characters">
-              <a>characters</a>
-            </Link>
-          </div>
-          <div>
-            <Link href="/locations">
-              <a>location</a>
-            </Link>
-          </div>
-          <div>
-            <Link
-              href={{
-                pathname: "/characters/[id]",
-                query: { id: "test" },
-              }}
-            >
-              <a>characters/detail</a>
-            </Link>
-          </div>
-          <div>
-            <Link href="/characters/test">Go to pages/characters/[id]</Link>
-          </div> */}
+        {/* <Dropdown /> */}
+        <div>
+          <Dropdown
+            label={"React Select"}
+            placeholder="Pick one"
+            options={[
+              { value: "Rock" },
+              { value: "Paper" },
+              { value: "Scissors" },
+            ]}
+          />
+          <span style={{ display: "inline-block", width: 20 }} />
+          <Dropdown
+            label="React Multiple Select"
+            placeholder="Pick some"
+            options={[
+              { value: "Rock" },
+              { value: "Paper" },
+              { value: "Scissors" },
+            ]}
+            multiple
+          />
+        </div>
         <div className="col row">
           {characters?.results?.map((character: any) => (
-            <a
-              className="col-md-4 my-2"
-              href={`/characters/${character.id}`}
-              key={character.id}
-            >
+            <div className="col-md-4 my-2" key={character.id}>
               <CharacterCard {...character} />
-            </a>
+            </div>
           ))}
         </div>
       </main>

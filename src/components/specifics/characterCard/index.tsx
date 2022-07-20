@@ -2,6 +2,7 @@ import React from "react";
 import BookMark from "../../../assets/icons/bookmark";
 import styles from "./CharacterCard.module.css";
 export interface Icard {
+  id: number;
   image: string;
   name: string;
   location: {
@@ -20,6 +21,7 @@ export interface Icard {
 }
 
 const CharacterCard = ({
+  id,
   image,
   name,
   status = "unknown",
@@ -29,7 +31,7 @@ const CharacterCard = ({
   location,
 }: Icard) => {
   return (
-    <div className="card p-3 mb-2">
+    <a className="card p-3 mb-2" href={`/characters/${id}`}>
       <div className="col d-flex justify-content-between align-items-center px-2 py-3">
         <div>
           <img
@@ -59,7 +61,7 @@ const CharacterCard = ({
           <span className="text-capitalize">{location?.name}</span>
         </div>
       </div>
-    </div>
+    </a>
   );
   // return (
   //   <div className="card">
