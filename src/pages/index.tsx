@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { useState } from "react";
-import Link from "next/link";
 import Head from "next/head";
+import Link from "next/link";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import withLoading from "../Hoc/Loading";
@@ -24,6 +24,7 @@ export const getServerSideProps = async () => {
       result = res;
     })
     .catch((err) => console.log("apo call", err));
+  console.log("result---", result);
   return {
     props: {
       characters: result,
@@ -35,7 +36,6 @@ const Home: NextPage = (props) => {
   const dispatch = useAppDispatch();
   const test: any = useAppSelector(selectCharacter);
   const [name, setName] = useState("a");
-  console.log("characters", characters);
   return (
     <div className={"col bg-white mx-3 p-3 rounded-3"}>
       <Head>
@@ -70,15 +70,15 @@ const Home: NextPage = (props) => {
           <div>
             <Link href="/characters/test">Go to pages/characters/[id]</Link>
           </div> */}
-        <div className="col-3 border rounded-3 my-2">A</div>
-        <div className="col-9 d-flex justify-content-center flex-wrap">
+        <div className="col row">
           {characters?.results?.map((character: any) => (
-            <div
-              className="col-5 d-flex flex-column border rounded-3 m-2 py-2"
+            <a
+              className="col-md-4 my-2"
+              href={`/characters/${character.id}`}
               key={character.id}
             >
               <CharacterCard {...character} />
-            </div>
+            </a>
           ))}
         </div>
       </main>

@@ -24,9 +24,13 @@ const Locations: NextPage = (props) => {
     <div className="col bg-white mx-3 p-3 rounded-3">
       <div className="col row">
         {locations?.results?.map((location: any) => (
-          <div key={location.id} className="col-md-4 my-2">
+          <a
+            key={location.id}
+            className="col-md-4 my-2"
+            href={`/locations/${location.id}`}
+          >
             <LocationCard {...location} />
-          </div>
+          </a>
         ))}
       </div>
     </div>
