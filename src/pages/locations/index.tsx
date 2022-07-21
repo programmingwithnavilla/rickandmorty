@@ -1,9 +1,10 @@
 import dynamic from "next/dynamic";
 import ApiCall from "../../infrastructure/services/axios";
+import { Ilocations, IPayload } from "../../infrastructure/interface";
 import type { NextPage } from "next";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { Ilocations } from "../../infrastructure/interface";
+const Error = dynamic(() => import("../../components/specifics/error"));
 const LocationCard = dynamic(
   () => import("../../components/specifics/locationCard")
 );
@@ -13,26 +14,55 @@ const Pagination = dynamic(
 
 export const getServerSideProps = async (context: any) => {
   const { query, res, req } = context;
-  let result = null;
-  await ApiCall({
-    url: `location/?page=${query.page || 1}`,
-  })
-    .then((res) => {
-      result = res;
-    })
-    .catch((err) => console.log("apo call", err));
-  return {
-    props: {
-      locations: result,
+  // let result = null;
+  let payload: IPayload = {
+    data: {
+      locations: {},
     },
+    statusCode: 200,
+    errorMessage: "",
   };
+  try {
+    await ApiCall({
+      url: `location/?page=${query.page || 1}`,
+    })
+      .then((res) => {
+        payload.data = {
+          ...payload.data,
+          locations: res,
+        };
+      })
+      .catch(({ status, statusText }) => {
+        payload.statusCode = status;
+        payload.errorMessage = statusText;
+      });
+    return {
+      props: {
+        payload,
+      },
+    };
+  } catch {
+    return {
+      props: {
+        payload: {
+          ...payload,
+          statusCode: 500,
+          errorMessage: "Internal Server Error",
+        },
+      },
+    };
+  }
 };
 
-const Locations: NextPage = (props) => {
-  const { locations }: any = props;
+const Locations: NextPage = ({ payload }: any) => {
+  const {
+    data: { locations },
+    statusCode,
+    errorMessage,
+  }: any = payload;
   const [page, setPage] = useState(1);
   const router = useRouter();
-  console.log("locaitons", locations);
+
   const handlePagination = (page: number) => {
     const path = router.pathname;
     const query = router.query;
@@ -43,6 +73,8 @@ const Locations: NextPage = (props) => {
       query: query,
     });
   };
+  if (statusCode != 200)
+    return <Error statusCode={statusCode} message={errorMessage} />;
   return (
     <div className="col d-flex flex-column bg-white mx-3 p-3 rounded-3">
       <div className="col row">
