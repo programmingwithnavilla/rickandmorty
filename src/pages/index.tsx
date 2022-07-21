@@ -12,6 +12,7 @@ import ApiCall from "../infrastructure/services/axios";
 const CharacterCard = dynamic(
   () => import("../components/specifics/characterCard")
 );
+const Error = dynamic(() => import("../components/specifics/error"));
 const Dropdown = dynamic(() => import("../components/specifics/dropdown"));
 import {
   setCharacter,
@@ -19,6 +20,7 @@ import {
   selectCharacter,
 } from "../store/features/charactersSlice";
 import { RootState } from "../store/index";
+
 export const getServerSideProps = async () => {
   let result = null;
   await ApiCall({
@@ -36,10 +38,11 @@ export const getServerSideProps = async () => {
   };
 };
 const Home: NextPage = (props) => {
-  const { characters }: any = props;
+  const { characters, errorCode }: any = props;
   const dispatch = useAppDispatch();
   const test: any = useAppSelector(selectCharacter);
   const [name, setName] = useState("a");
+  if (errorCode) return <Error statusCode={errorCode} />;
   return (
     <div className={"col bg-white mx-3 p-3 rounded-3"}>
       <Head>

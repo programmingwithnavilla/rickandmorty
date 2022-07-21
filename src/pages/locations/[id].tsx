@@ -14,13 +14,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   let result: any = null;
   let characters: ICharacters[] = [];
   let characterId: any = [];
+  let error: any = null;
+
   await ApiCall({
     url: `location/${query.id}`,
   })
     .then((res) => {
       result = res;
     })
-    .catch((err) => console.log("apo call", err));
+    .catch((err) => (error = err));
+
   characterId = result?.residents?.map(
     (epi: string) => epi.split("/")[epi.split("/").length - 1]
   );
@@ -28,10 +31,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     await ApiCall({
       url: `character/${characterId.join()}`,
     })
-      .then((res) => (characters = res))
-      .catch((err) => console.log("apo call", err));
-
-  console.log("result---", characterId);
+      .then((res) => {
+        if (res.length > 1) characters = res;
+        else characters.push(res);
+      })
+      .catch((err) => (error = err));
 
   return {
     props: {

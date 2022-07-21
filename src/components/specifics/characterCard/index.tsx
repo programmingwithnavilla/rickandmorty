@@ -14,7 +14,7 @@ const CharacterCard = ({
   location,
 }: ICharacters) => {
   return (
-    <a className="card p-3 mb-2" href={`/characters/${id}`}>
+    <a className="card p-3 mb-2 cursor-pointer" href={`/characters/${id}`}>
       <div className="col d-flex justify-content-between align-items-center px-2 py-3">
         <div>
           <img
@@ -23,7 +23,14 @@ const CharacterCard = ({
           />
         </div>
         <div className="col-8 px-2 d-flex flex-column">
-          <div>{name}</div>
+          <span
+            className="fs-4 text-truncate"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title={name}
+          >
+            {name}
+          </span>
           <div className="text-muted">
             <span>{species} - </span>
             <span>{gender} - </span>
@@ -36,12 +43,14 @@ const CharacterCard = ({
       </div>
       <div className="col d-flex flex-column border-top mx-2 py-3">
         <div>
-          <span className="px-1 text-capitalize">origin:</span>
-          <span className="text-capitalize">{origin?.name}</span>
+          <span className="px-1 text-capitalize text-muted fs-6">origin:</span>
+          <span className="text-capitalize fs-5">{origin?.name}</span>
         </div>
         <div>
-          <span className="px-1 text-capitalize">location:</span>
-          <span className="text-capitalize">{location?.name}</span>
+          <span className="px-1 text-capitalize text-muted fs-6">
+            location:
+          </span>
+          <span className="text-capitalize fs-5">{location?.name}</span>
         </div>
       </div>
     </a>

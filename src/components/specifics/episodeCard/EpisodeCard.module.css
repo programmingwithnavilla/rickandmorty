@@ -1,4 +1,10 @@
 .episodeCard {
-  width: 2.4rem;
-  height: 2.4rem;
+  width: 2.8rem;
+  height: 2.8rem;
+}
+
+.bgEpisode {
+  background-image: linear-gradient(90deg, #fbdeff, #fcf9ee, #d3fff1);
+  color: #14387e !important;
+  border: 1px solid #aeaeae;
 }
