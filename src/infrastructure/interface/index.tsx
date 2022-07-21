@@ -56,3 +56,9 @@ export interface IError {
   message: string;
   statusCode: number;
 }
+
+export interface IPayload {
+  data: any;
+  statusCode: number;
+  errorMessage: string;
+}

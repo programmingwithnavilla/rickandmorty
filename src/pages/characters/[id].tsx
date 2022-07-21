@@ -1,7 +1,7 @@
 import type { NextPage, GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
 import ApiCall from "../../infrastructure/services/axios";
-import { IEpisodes, IError } from "../../infrastructure/interface";
+import { IEpisodes, IError, IPayload } from "../../infrastructure/interface";
 const Error = dynamic(() => import("../../components/specifics/error"));
 const EpisodeCard = dynamic(
   () => import("../../components/specifics/episodeCard")
@@ -23,18 +23,31 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     message: "",
     statusCode: 0,
   };
+  let payload: IPayload = {
+    data: {
+      character: [],
+      episodes: [],
+    },
+    statusCode: 200,
+    errorMessage: "",
+  };
   try {
     await ApiCall({
       url: `character/${query.id}`,
     })
       .then((res) => {
-        result = res;
+        // result = res;
+        payload.data = {
+          ...payload.data,
+          character: res,
+        };
+        payload.statusCode = 200;
       })
       .catch(({ status, statusText }) => {
-        error.statusCode = status;
-        error.message = statusText;
+        payload.statusCode = status;
+        payload.errorMessage = statusText;
       });
-    episodeId = result?.episode?.map(
+    episodeId = payload.data.character?.episode?.map(
       (epi: string) => epi.split("/")[epi.split("/").length - 1]
     );
     if (episodeId.length > 0)
@@ -42,18 +55,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         url: `episode/${episodeId.join()}`,
       })
         .then((res) => {
-          if (res.length > 1) episodes = res;
-          else episodes.push(res);
+          payload.data = {
+            ...payload.data,
+            episodes: res.length > 1 ? res : [res],
+          };
         })
         .catch(({ status, statusText }) => {
-          error.statusCode = status;
-          error.message = statusText;
+          payload.statusCode = status;
+          payload.errorMessage = statusText;
         });
     return {
       props: {
-        character: result,
-        episodes,
-        error,
+        payload,
       },
     };
   } catch {
@@ -67,13 +80,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 };
 
-const DetailCharacters: NextPage = (props) => {
-  const { character, episodes, error }: any = props;
-  console.log("error", error);
-  console.log("episodes", episodes);
-
-  if (error)
-    return <Error statusCode={error.statusCode} message={error.message} />;
+const DetailCharacters: NextPage = ({ payload }: any) => {
+  const {
+    data: { character, episodes },
+    statusCode,
+    errorMessage,
+  }: any = payload;
+  if (statusCode != 200)
+    return <Error statusCode={statusCode} message={errorMessage} />;
   return (
     <div className="col d-flex flex-column bg-white rounded-3 mx-3 p-3">
       <div className="d-flex">

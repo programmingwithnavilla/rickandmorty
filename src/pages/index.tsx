@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import dynamic from "next/dynamic";
 import { useState } from "react";
+import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
@@ -10,6 +11,8 @@ import { useDispatch } from "react-redux";
 import { useAppSelector, useAppDispatch } from "../hooks/redux-hooks";
 import ApiCall from "../infrastructure/services/axios";
 import { IError } from "../infrastructure/interface";
+
+const Pagination = dynamic(() => import("../components/specifics/pagination"));
 const CharacterCard = dynamic(
   () => import("../components/specifics/characterCard")
 );
@@ -22,7 +25,10 @@ import {
 } from "../store/features/charactersSlice";
 import { RootState } from "../store/index";
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = async (context: any) => {
+  const { query, res, req } = context;
+  console.log("context", query);
+
   let result = null;
   let error: IError = {
     message: "",
@@ -30,7 +36,7 @@ export const getServerSideProps = async () => {
   };
   try {
     await ApiCall({
-      url: "character/?page=1&name=&status=&gender=&species",
+      url: `character/?page=${query.page || 1}&name=&status=&gender=&species`,
     })
       .then((res) => {
         result = res;
@@ -59,6 +65,20 @@ const Home: NextPage = (props) => {
   const dispatch = useAppDispatch();
   const test: any = useAppSelector(selectCharacter);
   const [name, setName] = useState("a");
+  const [page, setPage] = useState(1);
+  const router = useRouter();
+
+  const handlePagination = (page: number) => {
+    const path = router.pathname;
+    const query = router.query;
+    setPage(page);
+    query.page = page.toString();
+    router.push({
+      pathname: path,
+      query: query,
+    });
+  };
+  console.log("characters", characters);
   if (error)
     return <Error statusCode={error.statusCode} message={error.message} />;
   return (
@@ -69,7 +89,7 @@ const Home: NextPage = (props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="col d-flex">
+      <main className="col d-flex flex-column">
         {/* <Dropdown /> */}
         {/* <div>
           <Dropdown
@@ -99,6 +119,13 @@ const Home: NextPage = (props) => {
               <CharacterCard {...character} />
             </div>
           ))}
+        </div>
+        <div className="d-flex justify-content-center my-3">
+          <Pagination
+            totalCount={characters?.info?.count}
+            currentPage={page}
+            returnCurrentPage={(pge: any) => handlePagination(pge)}
+          />
         </div>
       </main>
     </div>
