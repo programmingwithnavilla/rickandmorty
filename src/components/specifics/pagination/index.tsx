@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
-
-interface IPagination {
-  pageSize?: number;
-  totalCount: number;
-  currentPage: number;
-  returnCurrentPage: Function;
-}
+import { IPagination } from "../../../infrastructure/interface/component";
 const Pagination = ({
   pageSize = 20,
   totalCount = 5,

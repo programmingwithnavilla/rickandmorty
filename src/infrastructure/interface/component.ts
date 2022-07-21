@@ -5,7 +5,7 @@ export interface IDropdownProps {
   multiple?: any;
 }
 
-interface IDropdownState {
+export interface IDropdownState {
   values: any[];
   focusedValue: number;
   isFocused: boolean;
@@ -14,3 +14,12 @@ interface IDropdownState {
 }
 
 // dropdown interface
+
+export interface IPagination {
+  pageSize?: number;
+  totalCount: number;
+  currentPage: number;
+  returnCurrentPage: Function;
+}
+
+// Pagination interface

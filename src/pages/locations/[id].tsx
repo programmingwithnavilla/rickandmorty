@@ -1,11 +1,9 @@
 import type { NextPage, GetServerSideProps } from "next";
 import ApiCall from "../../infrastructure/services/axios";
-import {
-  Ilocations,
-  ICharacters,
-  IError,
-} from "../../infrastructure/interface";
+import dynamic from "next/dynamic";
+import { ICharacters, IPayload } from "../../infrastructure/interface";
 import CharacterCard from "../../components/specifics/characterCard";
+const Error = dynamic(() => import("../../components/specifics/error"));
 export const handler: any = (req: any, res: any) => {
   res.setHeader("Cache-Control", "s-maxage=10");
 };
@@ -15,26 +13,31 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     "Cache-Control",
     "public, s-maxage=10, stale-while-revalidate=59"
   );
-  let result: any = null;
-  let characters: ICharacters[] = [];
+
   let characterId: any = [];
-  let error: IError = {
-    message: "",
-    statusCode: 0,
+  let payload: IPayload = {
+    data: {
+      location: {},
+      episodes: [],
+    },
+    statusCode: 200,
+    errorMessage: "",
   };
   try {
     await ApiCall({
       url: `location/${query.id}`,
     })
       .then((res) => {
-        result = res;
+        payload.data = {
+          ...payload.data,
+          location: res,
+        };
       })
       .catch(({ status, statusText }) => {
-        error.statusCode = status;
-        error.message = statusText;
+        payload.statusCode = status;
+        payload.errorMessage = statusText;
       });
-
-    characterId = result?.residents?.map(
+    characterId = payload.data.location?.residents?.map(
       (epi: string) => epi.split("/")[epi.split("/").length - 1]
     );
     if (characterId.length > 0)
@@ -42,35 +45,42 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         url: `character/${characterId.join()}`,
       })
         .then((res) => {
-          if (res.length > 1) characters = res;
-          else characters.push(res);
+          payload.data = {
+            ...payload.data,
+            characters: res.length > 1 ? res : [res],
+          };
         })
         .catch(({ status, statusText }) => {
-          error.statusCode = status;
-          error.message = statusText;
+          payload.statusCode = status;
+          payload.errorMessage = statusText;
         });
 
     return {
       props: {
-        location: result,
-        characters,
-        error,
+        payload,
       },
     };
   } catch {
     return {
       props: {
-        location: result,
-        characters,
-        error,
+        payload: {
+          ...payload,
+          statusCode: 500,
+          errorMessage: "Internal Server Error",
+        },
       },
     };
   }
 };
 
-const DetailLocation: NextPage = (props) => {
-  const { location, characters }: any = props;
-  console.log("location", location);
+const DetailLocation: NextPage = ({ payload }: any) => {
+  const {
+    data: { location, characters },
+    statusCode,
+    errorMessage,
+  }: any = payload;
+  if (statusCode != 200)
+    return <Error statusCode={statusCode} message={errorMessage} />;
   return (
     <div className="col bg-white mx-3 p-3 rounded-3">
       <div className="row mb-3">

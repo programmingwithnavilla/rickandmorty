@@ -16,16 +16,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     "public, s-maxage=10, stale-while-revalidate=59"
   );
 
-  let result: any = null;
-  let episodes: IEpisodes[] = [];
   let episodeId: any = [];
-  let error: IError = {
-    message: "",
-    statusCode: 0,
-  };
   let payload: IPayload = {
     data: {
-      character: [],
+      character: {},
       episodes: [],
     },
     statusCode: 200,
@@ -37,10 +31,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     })
       .then((res) => {
         // result = res;
-        payload.data = {
-          ...payload.data,
-          character: res,
-        };
+        payload.data.character = res;
         payload.statusCode = 200;
       })
       .catch(({ status, statusText }) => {
@@ -72,9 +63,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   } catch {
     return {
       props: {
-        character: result,
-        episodes,
-        error,
+        payload: {
+          ...payload,
+          statusCode: 500,
+          errorMessage: "Internal Server Error",
+        },
       },
     };
   }
