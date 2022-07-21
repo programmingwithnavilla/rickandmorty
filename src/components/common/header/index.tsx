@@ -10,7 +10,7 @@ const Header = ({ name = "Guest" }: AppProps) => (
   <header className=" d-flex align-items-center justify-content-between py-2 px-4">
     <Logo />
     <RickAndMorty />
-    Hello {name}
+    <span>Hello {name} </span>
   </header>
 );
 

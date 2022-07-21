@@ -1,17 +1,23 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Characters } from "../../infrastructure/interface";
+import { ICharacters } from "../../infrastructure/interface";
 
-const intialState: Characters = {
-  id: "",
+const intialState: ICharacters = {
+  id: 0,
   name: "",
   status: "",
   species: "",
   type: "",
   gender: "",
-  origin: "",
-  location: "",
+  origin: {
+    name: "",
+    url: "",
+  },
+  location: {
+    name: "",
+    url: "",
+  },
   image: "",
-  episode: "",
+  episode: [],
   created: "",
 };
 
@@ -21,7 +27,7 @@ const charactersSlice = createSlice({
     characterInfo: intialState,
   },
   reducers: {
-    setCharacter(state: any, action: PayloadAction<Characters>) {
+    setCharacter(state: any, action: PayloadAction<ICharacters>) {
       console.log("---state---", state);
       console.log("----", action.payload);
       state.characterInfo = { ...action.payload };

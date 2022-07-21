@@ -1,6 +1,6 @@
 import type { NextPage, GetServerSideProps } from "next";
 import ApiCall from "../../infrastructure/services/axios";
-import { Ilocations, Characters } from "../../infrastructure/interface";
+import { Ilocations, ICharacters } from "../../infrastructure/interface";
 import CharacterCard from "../../components/specifics/characterCard";
 export const handler: any = (req: any, res: any) => {
   res.setHeader("Cache-Control", "s-maxage=10");
@@ -12,7 +12,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     "public, s-maxage=10, stale-while-revalidate=59"
   );
   let result: any = null;
-  let characters: Characters[] = [];
+  let characters: ICharacters[] = [];
   let characterId: any = [];
   await ApiCall({
     url: `location/${query.id}`,
@@ -62,7 +62,7 @@ const DetailLocation: NextPage = (props) => {
         <h5 className="border-top py-3">Charcaters of {location?.name}</h5>
       </div>
       <div className="col row">
-        {characters?.map((character: Characters) => (
+        {characters?.map((character: ICharacters) => (
           <div className="col-md-4 my-2" key={character.id}>
             <CharacterCard {...character} />
           </div>

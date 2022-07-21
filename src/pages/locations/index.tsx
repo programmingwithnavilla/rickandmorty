@@ -1,7 +1,10 @@
 import type { NextPage } from "next";
-import LocationCard from "../../components/specifics/locationCard";
+import dynamic from "next/dynamic";
 import ApiCall from "../../infrastructure/services/axios";
-
+import { Ilocations } from "../../infrastructure/interface";
+const LocationCard = dynamic(
+  () => import("../../components/specifics/locationCard")
+);
 export const getServerSideProps = async () => {
   let result = null;
   await ApiCall({
@@ -23,7 +26,7 @@ const Locations: NextPage = (props) => {
   return (
     <div className="col bg-white mx-3 p-3 rounded-3">
       <div className="col row">
-        {locations?.results?.map((location: any) => (
+        {locations?.results?.map((location: Ilocations) => (
           <a
             key={location.id}
             className="col-md-4 my-2"

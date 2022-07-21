@@ -1,14 +1,7 @@
 import React from "react";
 import styles from "./LocationCard.module.css";
-interface Ilocation {
-  id: number;
-  created: string;
-  dimension: string;
-  name: string;
-  residents: string[];
-  type: string;
-  url: string;
-}
+import { Ilocations } from "../../../infrastructure/interface";
+
 const LocationCard = ({
   id,
   created,
@@ -17,7 +10,7 @@ const LocationCard = ({
   residents,
   type,
   url,
-}: Ilocation) => {
+}: Ilocations) => {
   return (
     <div className="card p-3 mb-2">
       <div className="d-flex justify-content-between">

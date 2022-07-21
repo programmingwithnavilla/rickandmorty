@@ -1,21 +1,9 @@
 import React, { Component, FormEvent } from "react";
+import { IDropdownProps } from "../../../infrastructure/interface/component";
 import styles from "./Dropdown.module.css";
-
-interface Iprops {
-  label: string;
-  placeholder: string;
-  options: any[];
-  multiple?: any;
-}
-interface Istate {
-  values: any[];
-  focusedValue: number;
-  isFocused: boolean;
-  isOpen: boolean;
-  typed: string;
-}
-class Dropdown extends Component<Iprops, any> {
-  constructor(props: Iprops) {
+//IDropdownState
+class Dropdown extends Component<IDropdownProps, any> {
+  constructor(props: IDropdownProps) {
     super(props);
 
     this.state = {

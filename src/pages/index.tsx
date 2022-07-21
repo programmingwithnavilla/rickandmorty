@@ -9,7 +9,9 @@ import withLoading from "../Hoc/Loading";
 import { useDispatch } from "react-redux";
 import { useAppSelector, useAppDispatch } from "../hooks/redux-hooks";
 import ApiCall from "../infrastructure/services/axios";
-import CharacterCard from "../components/specifics/characterCard";
+const CharacterCard = dynamic(
+  () => import("../components/specifics/characterCard")
+);
 const Dropdown = dynamic(() => import("../components/specifics/dropdown"));
 import {
   setCharacter,
@@ -48,7 +50,7 @@ const Home: NextPage = (props) => {
 
       <main className="col d-flex">
         {/* <Dropdown /> */}
-        <div>
+        {/* <div>
           <Dropdown
             label={"React Select"}
             placeholder="Pick one"
@@ -69,7 +71,7 @@ const Home: NextPage = (props) => {
             ]}
             multiple
           />
-        </div>
+        </div> */}
         <div className="col row">
           {characters?.results?.map((character: any) => (
             <div className="col-md-4 my-2" key={character.id}>

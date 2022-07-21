@@ -2,18 +2,37 @@ export interface WithLoadingProps {
   loading: boolean;
 }
 
-export interface Characters {
-  id: string;
-  name: string;
-  status: string;
-  species: string;
-  type: string;
-  gender: string;
-  origin: any;
-  location: any;
+// export interface ICharacters {
+//   id: string;
+//   name: string;
+//   status: string;
+//   species: string;
+//   type: string;
+//   gender: string;
+//   origin: any;
+//   location: any;
+//   image: string;
+//   episode: any;
+//   created: string;
+// }
+export interface ICharacters {
+  id: number;
   image: string;
-  episode: any;
+  name: string;
+  location: {
+    name: string;
+    url: string;
+  };
+  origin: {
+    name: string;
+    url: string;
+  };
+  species: string;
+  status: string;
+  type: string;
   created: string;
+  gender: string;
+  episode: string[];
 }
 
 export interface Ilocations {
