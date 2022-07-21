@@ -1,7 +1,7 @@
 import type { NextPage, GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
 import ApiCall from "../../infrastructure/services/axios";
-import { ICharacters, IEpisodes } from "../../infrastructure/interface";
+import { ICharacters, IEpisodes, IError } from "../../infrastructure/interface";
 const Error = dynamic(() => import("../../components/specifics/error"));
 const EpisodeCard = dynamic(
   () => import("../../components/specifics/episodeCard")
@@ -19,41 +19,61 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   let result: any = null;
   let episodes: IEpisodes[] = [];
   let episodeId: any = [];
-  let error: any = null;
-  await ApiCall({
-    url: `character/${query.id}`,
-  })
-    .then((res) => {
-      result = res;
-    })
-    .catch((err) => (error = err));
-  episodeId = result?.episode?.map(
-    (epi: string) => epi.split("/")[epi.split("/").length - 1]
-  );
-  if (episodeId.length > 0)
+  let error: IError = {
+    message: "",
+    statusCode: 0,
+  };
+  try {
     await ApiCall({
-      url: `episode/${episodeId.join()}`,
+      url: `character/${query.id}`,
     })
       .then((res) => {
-        if (res.length > 1) episodes = res;
-        else episodes.push(res);
+        result = res;
       })
-      .catch((err) => (error = err));
-  return {
-    props: {
-      character: result,
-      episodes,
-      error,
-    },
-  };
+      .catch(({ status, statusText }) => {
+        error.statusCode = status;
+        error.message = statusText;
+      });
+    episodeId = result?.episode?.map(
+      (epi: string) => epi.split("/")[epi.split("/").length - 1]
+    );
+    if (episodeId.length > 0)
+      await ApiCall({
+        url: `episode/${episodeId.join()}`,
+      })
+        .then((res) => {
+          if (res.length > 1) episodes = res;
+          else episodes.push(res);
+        })
+        .catch(({ status, statusText }) => {
+          error.statusCode = status;
+          error.message = statusText;
+        });
+    return {
+      props: {
+        character: result,
+        episodes,
+        error,
+      },
+    };
+  } catch {
+    return {
+      props: {
+        character: result,
+        episodes,
+        error,
+      },
+    };
+  }
 };
 
 const DetailCharacters: NextPage = (props) => {
-  const { character, episodes, errorCode, error }: any = props;
-  console.log("episodes", episodes);
+  const { character, episodes, error }: any = props;
   console.log("error", error);
+  console.log("episodes", episodes);
 
-  if (errorCode) return <Error statusCode={errorCode} />;
+  if (error)
+    return <Error statusCode={error.statusCode} message={error.message} />;
   return (
     <div className="col d-flex flex-column bg-white rounded-3 mx-3 p-3">
       <div className="d-flex">

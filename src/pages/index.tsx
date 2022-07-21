@@ -9,6 +9,7 @@ import withLoading from "../Hoc/Loading";
 import { useDispatch } from "react-redux";
 import { useAppSelector, useAppDispatch } from "../hooks/redux-hooks";
 import ApiCall from "../infrastructure/services/axios";
+import { IError } from "../infrastructure/interface";
 const CharacterCard = dynamic(
   () => import("../components/specifics/characterCard")
 );
@@ -23,26 +24,43 @@ import { RootState } from "../store/index";
 
 export const getServerSideProps = async () => {
   let result = null;
-  await ApiCall({
-    url: "character/?page=1&name=&status=&gender=&species",
-  })
-    .then((res) => {
-      result = res;
-    })
-    .catch((err) => console.log("apo call", err));
-  console.log("result---", result);
-  return {
-    props: {
-      characters: result,
-    },
+  let error: IError = {
+    message: "",
+    statusCode: 0,
   };
+  try {
+    await ApiCall({
+      url: "character/?page=1&name=&status=&gender=&species",
+    })
+      .then((res) => {
+        result = res;
+      })
+      .catch(({ status, statusText }) => {
+        error.statusCode = status;
+        error.message = statusText;
+      });
+    console.log("result---", result);
+    return {
+      props: {
+        characters: result,
+      },
+    };
+  } catch {
+    return {
+      props: {
+        characters: result,
+        error,
+      },
+    };
+  }
 };
 const Home: NextPage = (props) => {
-  const { characters, errorCode }: any = props;
+  const { characters, errorCode, error }: any = props;
   const dispatch = useAppDispatch();
   const test: any = useAppSelector(selectCharacter);
   const [name, setName] = useState("a");
-  if (errorCode) return <Error statusCode={errorCode} />;
+  if (error)
+    return <Error statusCode={error.statusCode} message={error.message} />;
   return (
     <div className={"col bg-white mx-3 p-3 rounded-3"}>
       <Head>

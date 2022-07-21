@@ -1,6 +1,10 @@
 import type { NextPage, GetServerSideProps } from "next";
 import ApiCall from "../../infrastructure/services/axios";
-import { Ilocations, ICharacters } from "../../infrastructure/interface";
+import {
+  Ilocations,
+  ICharacters,
+  IError,
+} from "../../infrastructure/interface";
 import CharacterCard from "../../components/specifics/characterCard";
 export const handler: any = (req: any, res: any) => {
   res.setHeader("Cache-Control", "s-maxage=10");
@@ -14,35 +18,54 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   let result: any = null;
   let characters: ICharacters[] = [];
   let characterId: any = [];
-  let error: any = null;
-
-  await ApiCall({
-    url: `location/${query.id}`,
-  })
-    .then((res) => {
-      result = res;
-    })
-    .catch((err) => (error = err));
-
-  characterId = result?.residents?.map(
-    (epi: string) => epi.split("/")[epi.split("/").length - 1]
-  );
-  if (characterId.length > 0)
+  let error: IError = {
+    message: "",
+    statusCode: 0,
+  };
+  try {
     await ApiCall({
-      url: `character/${characterId.join()}`,
+      url: `location/${query.id}`,
     })
       .then((res) => {
-        if (res.length > 1) characters = res;
-        else characters.push(res);
+        result = res;
       })
-      .catch((err) => (error = err));
+      .catch(({ status, statusText }) => {
+        error.statusCode = status;
+        error.message = statusText;
+      });
 
-  return {
-    props: {
-      location: result,
-      characters,
-    },
-  };
+    characterId = result?.residents?.map(
+      (epi: string) => epi.split("/")[epi.split("/").length - 1]
+    );
+    if (characterId.length > 0)
+      await ApiCall({
+        url: `character/${characterId.join()}`,
+      })
+        .then((res) => {
+          if (res.length > 1) characters = res;
+          else characters.push(res);
+        })
+        .catch(({ status, statusText }) => {
+          error.statusCode = status;
+          error.message = statusText;
+        });
+
+    return {
+      props: {
+        location: result,
+        characters,
+        error,
+      },
+    };
+  } catch {
+    return {
+      props: {
+        location: result,
+        characters,
+        error,
+      },
+    };
+  }
 };
 
 const DetailLocation: NextPage = (props) => {

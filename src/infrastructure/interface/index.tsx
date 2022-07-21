@@ -51,3 +51,8 @@ export interface IEpisodes {
   name: string;
   url: string;
 }
+
+export interface IError {
+  message: string;
+  statusCode: number;
+}
