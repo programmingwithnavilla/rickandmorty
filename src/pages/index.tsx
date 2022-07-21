@@ -27,7 +27,6 @@ import { RootState } from "../store/index";
 
 export const getServerSideProps = async (context: any) => {
   const { query, res, req } = context;
-  console.log("context", query);
 
   let result = null;
   let error: IError = {
