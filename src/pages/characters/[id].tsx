@@ -1,7 +1,7 @@
 import type { NextPage, GetServerSideProps } from "next";
 import dynamic from "next/dynamic";
 import ApiCall from "../../infrastructure/services/axios";
-import { ICharacters, IEpisodes, IError } from "../../infrastructure/interface";
+import { IEpisodes, IError } from "../../infrastructure/interface";
 const Error = dynamic(() => import("../../components/specifics/error"));
 const EpisodeCard = dynamic(
   () => import("../../components/specifics/episodeCard")
