@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { IPagination } from "../../../infrastructure/interface/component";
 
 const Pagination = ({ total, current, pagination }: IPagination) => {
@@ -160,10 +160,9 @@ const Pagination = ({ total, current, pagination }: IPagination) => {
           ) : (
             <>
               {Array.apply(0, Array(5)).map((arr, i) => (
-                <>
+                <Fragment key={i}>
                   <li
                     className={`page-item ${current === i + 1 ? "active" : ""}`}
-                    key={i}
                   >
                     <a
                       className="page-link"
@@ -173,7 +172,7 @@ const Pagination = ({ total, current, pagination }: IPagination) => {
                       {i + 1}
                     </a>
                   </li>
-                </>
+                </Fragment>
               ))}
               <li className="page-item">
                 <a className="page-link disabled" href="#">

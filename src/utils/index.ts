@@ -1,16 +1,21 @@
 import { NextApiResponse, NextApiRequest } from "next";
 import Cookies from "cookies";
 
-export const setCookie = (res: NextApiResponse, req: NextApiRequest) => {
+export const setCookie = (
+  res: NextApiResponse,
+  req: NextApiRequest,
+  key: string,
+  value: string
+) => {
   const cookies = new Cookies(req, res);
-  cookies.set("favoriteCharacter", "navid", {
+  cookies.set(key, value, {
     httpOnly: true, // true by default
   });
 };
 
-export const getCookie = (res: NextApiResponse, req: NextApiRequest) => {
+export const getCookie = (res: any, req: any, key: string) => {
   const cookies = new Cookies(req, res);
-  return cookies.get("favoriteCharacter");
+  return cookies.get(key);
 };
 
 export const Conditional = ({ checkRender, children }: any) => {

@@ -26,6 +26,7 @@ import {
 import { RootState } from "../store/index";
 
 export const handler: any = (req: any, res: any) => {
+  console.log("-----handler-----");
   res.setHeader("Cache-Control", "s-maxage=10");
 };
 export const getServerSideProps = async (context: any) => {
@@ -52,8 +53,8 @@ export const getServerSideProps = async (context: any) => {
   if (gender) url += `&gender${gender}`;
   if (species) url += `&species${species}`;
 
-  setCookie(res, req);
-  // console.log("Asasas", getCookie(res, req));
+  setCookie(res, req, "test", "ali");
+  console.log("Asasas", getCookie(res, req, "test"));
   // url: `character/?page=${query.page || 1}&name=&status=&gender=&species`,
 
   try {
@@ -73,6 +74,7 @@ export const getServerSideProps = async (context: any) => {
     return {
       props: {
         payload,
+        cookie: { setCookie, getCookie },
       },
     };
   } catch {

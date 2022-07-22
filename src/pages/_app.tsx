@@ -1,4 +1,3 @@
-import ErrorBoundary from "../Hoc/ErrorBoundries";
 import store from "../store";
 import Header from "../components/common/header";
 import Sidebar from "../components/common/sidebar";
