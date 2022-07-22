@@ -13,7 +13,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { query, res, req } = context;
   res.setHeader(
     "Cache-Control",
-    "public, s-maxage=10, stale-while-revalidate=59"
+    "public, s-maxage=5, stale-while-revalidate=600"
   );
 
   let episodeId: any = [];

@@ -25,12 +25,19 @@ import {
 } from "../store/features/charactersSlice";
 import { RootState } from "../store/index";
 
+export const handler: any = (req: any, res: any) => {
+  res.setHeader("Cache-Control", "s-maxage=10");
+};
 export const getServerSideProps = async (context: any) => {
   const {
     query: { page = 1, name, status, gender, species },
     res,
     req,
   } = context;
+  res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=5, stale-while-revalidate=600"
+  );
 
   let payload: IPayload = {
     data: {
