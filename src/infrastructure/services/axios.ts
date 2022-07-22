@@ -22,13 +22,6 @@ const ApiCall = async ({
       console.log("--------Show error notification!--------");
       return Promise.reject(error.response);
     });
-  // try {
-  //   const result = await axios.request(options);
-  //   console.log("------result ---in axios----", result);
-  //   return result.data;
-  // } catch (error: any) {
-  //   return error;
-  // }
 };
 
 export default ApiCall;

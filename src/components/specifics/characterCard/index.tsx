@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect, FormEvent } from "react";
+import { useCookies } from "react-cookie";
 import BookMark from "../../../assets/icons/bookmark";
 import styles from "./CharacterCard.module.css";
 import { ICharacters } from "../../../infrastructure/interface";
@@ -13,6 +14,17 @@ const CharacterCard = ({
   origin,
   location,
 }: ICharacters) => {
+  const [cookies, setCookie] = useCookies(["favorite"]);
+  const [favorite, setFavorite] = useState({});
+  useEffect(() => {
+    if (!cookies.favorite) {
+      setCookie("favorite", favorite);
+    }
+  }, []);
+  const updateMyValue = () => {
+    setCookie("favorite", { id, name });
+    setFavorite({ id, name });
+  };
   return (
     <a className="card p-3 mb-2 cursor-pointer" href={`/characters/${id}`}>
       <div className="col d-flex justify-content-between align-items-center px-2 py-3">
@@ -37,8 +49,15 @@ const CharacterCard = ({
             <span>{status} </span>
           </div>
         </div>
-        <div>
-          <BookMark />
+        <div
+          onClick={(e) => {
+            e.preventDefault();
+            updateMyValue();
+          }}
+        >
+          <BookMark
+            color={name === cookies?.favorite?.name ? "#0a58ca" : "#00000042"}
+          />
         </div>
       </div>
       <div className="col d-flex flex-column border-top mx-2 py-3">

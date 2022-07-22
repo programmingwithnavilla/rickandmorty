@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import dynamic from "next/dynamic";
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
+import { useCookies } from "react-cookie";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import { useDispatch } from "react-redux";
@@ -8,7 +9,7 @@ import { useAppSelector, useAppDispatch } from "../hooks/redux-hooks";
 import ApiCall from "../infrastructure/services/axios";
 import { IPayload } from "../infrastructure/interface";
 import { Gender, Species, StatusType } from "../utils/filterValue";
-import { enumToArray, getCookie, setCookie } from "../utils/index";
+import { enumToArray } from "../utils/index";
 
 const Dropdown = dynamic(() => import("../components/specifics/dropdown"));
 const Button = dynamic(() => import("../components/specifics/button"));
@@ -18,16 +19,9 @@ const CharacterCard = dynamic(
   () => import("../components/specifics/characterCard")
 );
 const Error = dynamic(() => import("../components/specifics/error"));
-import {
-  setCharacter,
-  clearCharacter,
-  selectCharacter,
-} from "../store/features/charactersSlice";
-import { RootState } from "../store/index";
 
 export const handler: any = (req: any, res: any) => {
-  console.log("-----handler-----");
-  res.setHeader("Cache-Control", "s-maxage=10");
+  res.setHeader("Cache-Control", "s-maxage=2");
 };
 export const getServerSideProps = async (context: any) => {
   const {
@@ -37,7 +31,7 @@ export const getServerSideProps = async (context: any) => {
   } = context;
   res.setHeader(
     "Cache-Control",
-    "public, s-maxage=5, stale-while-revalidate=600"
+    "public, s-maxage=2, stale-while-revalidate=600"
   );
 
   let payload: IPayload = {
@@ -52,10 +46,6 @@ export const getServerSideProps = async (context: any) => {
   if (status) url += `&status${status}`;
   if (gender) url += `&gender${gender}`;
   if (species) url += `&species${species}`;
-
-  setCookie(res, req, "test", "ali");
-  console.log("Asasas", getCookie(res, req, "test"));
-  // url: `character/?page=${query.page || 1}&name=&status=&gender=&species`,
 
   try {
     await ApiCall({
@@ -74,7 +64,6 @@ export const getServerSideProps = async (context: any) => {
     return {
       props: {
         payload,
-        cookie: { setCookie, getCookie },
       },
     };
   } catch {
@@ -100,9 +89,23 @@ const Home: NextPage = ({ payload }: any) => {
   const [gender, setGender] = useState("");
   const [status, setStatus] = useState("");
   const [species, setSpecies] = useState("");
-
+  const [favoriteCharacter, setFavorite] = useState("");
   const [page, setPage] = useState(1);
   const router = useRouter();
+
+  const [cookies, setCookie] = useCookies(["name"]);
+  useEffect(() => {
+    if (!cookies.name) {
+      setCookie("name", "navid");
+    }
+  }, []);
+
+  const updateMyValue = (event: FormEvent<HTMLInputElement>) => {
+    const { value } = event.currentTarget;
+    setCookie("name", value);
+    setSearchvalue("sas");
+  };
+
   const searchOnchnage = (event: FormEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
     setSearchvalue(value);

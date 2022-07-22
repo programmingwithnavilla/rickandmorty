@@ -7,13 +7,13 @@ const EpisodeCard = dynamic(
   () => import("../../components/specifics/episodeCard")
 );
 export const handler: any = (req: any, res: any) => {
-  res.setHeader("Cache-Control", "s-maxage=10");
+  res.setHeader("Cache-Control", "s-maxage=2");
 };
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { query, res, req } = context;
   res.setHeader(
     "Cache-Control",
-    "public, s-maxage=5, stale-while-revalidate=600"
+    "public, s-maxage=2, stale-while-revalidate=600"
   );
 
   let episodeId: any = [];

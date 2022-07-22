@@ -5,13 +5,13 @@ import { ICharacters, IPayload } from "../../infrastructure/interface";
 import CharacterCard from "../../components/specifics/characterCard";
 const Error = dynamic(() => import("../../components/specifics/error"));
 export const handler: any = (req: any, res: any) => {
-  res.setHeader("Cache-Control", "s-maxage=10");
+  res.setHeader("Cache-Control", "s-maxage=2");
 };
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { query, res, req } = context;
   res.setHeader(
     "Cache-Control",
-    "public, s-maxage=10, stale-while-revalidate=59"
+    "public, s-maxage=2, stale-while-revalidate=600"
   );
 
   let characterId: any = [];

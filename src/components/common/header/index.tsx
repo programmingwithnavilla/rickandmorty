@@ -1,21 +1,34 @@
-import React from "react";
-import { NextApiResponse, NextApiRequest } from "next";
+import React, { useEffect } from "react";
 import Logo from "../../../assets/icons/logo";
 import RickAndMorty from "../../../assets/icons/rickAndMory";
-import { getCookie } from "../../../utils/index";
-import style from "./Header.module.css";
-import { NextResponse, NextRequest } from "next/server";
-import Cookies from "cookies";
+import { useCookies } from "react-cookie";
+import Button from "../../specifics/button";
 
-export async function getServerSideProps({ params }: any) {
-  console.log("----getServerSidePropsgetServerSideProps---");
-}
 const Header = (props: any) => {
+  const [cookies, setCookie] = useCookies(["favorite"]);
+
+  const resetCookie = () => {
+    setCookie("favorite", {});
+  };
+  useEffect(() => {
+    console.log("cookies changed");
+  }, [cookies]);
   return (
     <header className=" d-flex align-items-center justify-content-between py-2 px-4">
       <Logo />
-      <RickAndMorty />
-      <span>Hello </span>
+      <div className="ps-4">
+        <RickAndMorty />
+      </div>
+      <div className="d-flex align-items-center">
+        <Button
+          label="Reset Cookie"
+          className="btn-outline-danger mx-2"
+          onClick={resetCookie}
+        />
+        <span className="fs-5">
+          Hello, {cookies?.favorite?.name || "Guest"}{" "}
+        </span>
+      </div>
     </header>
   );
 };
