@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import Logo from "../../../assets/icons/logo";
 import RickAndMorty from "../../../assets/icons/rickAndMory";
-import { useCookies } from "react-cookie";
 import Button from "../../specifics/button";
+import { useCookies } from "react-cookie";
 
 const Header = (props: any) => {
   const [cookies, setCookie] = useCookies(["favorite"]);

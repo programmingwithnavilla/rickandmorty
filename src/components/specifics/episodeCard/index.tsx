@@ -1,6 +1,6 @@
 import React from "react";
-import { IEpisodes } from "../../../infrastructure/interface";
 import styles from "./EpisodeCard.module.css";
+import { IEpisodes } from "../../../infrastructure/interface";
 const EpisodeCard = ({ air_date, episode, name }: IEpisodes) => {
   return (
     <>

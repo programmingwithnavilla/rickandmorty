@@ -1,6 +1,7 @@
 import React from "react";
 import style from "./Error.module.css";
 import { IError } from "../../../infrastructure/interface";
+
 const Error = ({
   statusCode = 500,
   message = "Internal Server Error",

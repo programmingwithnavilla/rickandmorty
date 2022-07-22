@@ -1,6 +1,6 @@
-import React, { Component, FormEvent } from "react";
-import { IDropdownProps } from "../../../infrastructure/interface/component";
 import styles from "./Dropdown.module.css";
+import React, { Component } from "react";
+import { IDropdownProps } from "../../../infrastructure/interface/component";
 //IDropdownState
 class Dropdown extends Component<IDropdownProps, any> {
   constructor(props: IDropdownProps) {

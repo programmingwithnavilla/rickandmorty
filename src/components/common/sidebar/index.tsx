@@ -1,10 +1,8 @@
 import React from "react";
 import HomeIcon from "../../../assets/icons/homeIcon";
 import LocationIcon from "../../../assets/icons/locationIcon";
-
-import { useRouter } from "next/router";
-
 import style from "./Sidebar.module.css";
+import { useRouter } from "next/router";
 
 const Sidebar = () => {
   const router = useRouter();

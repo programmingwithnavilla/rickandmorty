@@ -5,7 +5,6 @@ const Pagination = ({ total, current, pagination }: IPagination) => {
   const handlePagination = (current: any) => {
     pagination(current);
   };
-
   return (
     <div>
       <nav aria-label="Page navigation example">
