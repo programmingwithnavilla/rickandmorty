@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, memo } from "react";
 import { IPagination } from "../../../infrastructure/interface/component";
 
 const Pagination = ({ total, current, pagination }: IPagination) => {
@@ -206,4 +206,4 @@ const Pagination = ({ total, current, pagination }: IPagination) => {
   );
 };
 
-export default Pagination;
+export default memo(Pagination);

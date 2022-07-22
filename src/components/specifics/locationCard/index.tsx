@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import styles from "./LocationCard.module.css";
 import { Ilocations } from "../../../infrastructure/interface";
 
@@ -43,4 +43,4 @@ const LocationCard = ({
     </div>
   );
 };
-export default LocationCard;
+export default memo(LocationCard);
