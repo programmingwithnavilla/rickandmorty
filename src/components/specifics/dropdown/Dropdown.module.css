@@ -8,7 +8,7 @@
 .select {
   position: relative;
   display: inline-block;
-  width: 320px;
+  width: 100%;
 }
 .select:focus {
   outline: 0;

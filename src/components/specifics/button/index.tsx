@@ -7,8 +7,14 @@ const Button = ({
   className = "btn-primary",
   label = "Search",
   onClick,
+  disabled,
 }: IButton) => (
-  <button type="button" className={`btn ${className}`} onClick={() => onClick}>
+  <button
+    type="button"
+    className={`btn ${className}`}
+    onClick={onClick}
+    disabled={disabled}
+  >
     {label}
   </button>
 );

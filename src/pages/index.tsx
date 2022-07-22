@@ -3,15 +3,14 @@ import dynamic from "next/dynamic";
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import Link from "next/link";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
-import withLoading from "../Hoc/Loading";
 import { useDispatch } from "react-redux";
 import { useAppSelector, useAppDispatch } from "../hooks/redux-hooks";
 import ApiCall from "../infrastructure/services/axios";
-import { IError } from "../infrastructure/interface";
+import { IPayload } from "../infrastructure/interface";
+import { Gender, Species, StatusType } from "../utils/filterValue";
+import { enumToArray, getCookie, setCookie } from "../utils/index";
 
+const Dropdown = dynamic(() => import("../components/specifics/dropdown"));
 const Button = dynamic(() => import("../components/specifics/button"));
 const SearchBox = dynamic(() => import("../components/specifics/searchBox"));
 const Pagination = dynamic(() => import("../components/specifics/pagination"));
@@ -19,7 +18,6 @@ const CharacterCard = dynamic(
   () => import("../components/specifics/characterCard")
 );
 const Error = dynamic(() => import("../components/specifics/error"));
-const Dropdown = dynamic(() => import("../components/specifics/dropdown"));
 import {
   setCharacter,
   clearCharacter,
@@ -28,48 +26,74 @@ import {
 import { RootState } from "../store/index";
 
 export const getServerSideProps = async (context: any) => {
-  const { query, res, req } = context;
+  const {
+    query: { page = 1, name, status, gender, species },
+    res,
+    req,
+  } = context;
 
-  let result = null;
-  let error: IError = {
-    message: "",
-    statusCode: 0,
+  let payload: IPayload = {
+    data: {
+      locations: {},
+    },
+    statusCode: 200,
+    errorMessage: "",
   };
+  let url = `character/?page=${page}`;
+  if (name) url += `&name=${name}`;
+  if (status) url += `&status${status}`;
+  if (gender) url += `&gender${gender}`;
+  if (species) url += `&species${species}`;
+
+  setCookie(res, req);
+  // console.log("Asasas", getCookie(res, req));
+  // url: `character/?page=${query.page || 1}&name=&status=&gender=&species`,
 
   try {
     await ApiCall({
-      url: `character/?page=${query.page || 1}&name=&status=&gender=&species`,
+      url: url,
     })
       .then((res) => {
-        result = res;
+        payload.data = {
+          ...payload.data,
+          characters: res,
+        };
       })
       .catch(({ status, statusText }) => {
-        error.statusCode = status;
-        error.message = statusText;
+        payload.statusCode = status;
+        payload.errorMessage = statusText;
       });
     return {
       props: {
-        characters: result,
+        payload,
       },
     };
   } catch {
     return {
       props: {
-        characters: result,
-        error,
+        payload: {
+          ...payload,
+          statusCode: 500,
+          errorMessage: "Internal Server Error",
+        },
       },
     };
   }
 };
-const Home: NextPage = (props) => {
-  const { characters, errorCode, error }: any = props;
-  const dispatch = useAppDispatch();
-  const test: any = useAppSelector(selectCharacter);
-  const [name, setName] = useState("a");
+const Home: NextPage = ({ payload }: any) => {
+  // const { characters, error }: any = props;
+  const {
+    data: { characters },
+    statusCode,
+    errorMessage,
+  }: any = payload;
   const [searchValue, setSearchvalue] = useState("");
+  const [gender, setGender] = useState("");
+  const [status, setStatus] = useState("");
+  const [species, setSpecies] = useState("");
+
   const [page, setPage] = useState(1);
   const router = useRouter();
-
   const searchOnchnage = (event: FormEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
     setSearchvalue(value);
@@ -77,6 +101,7 @@ const Home: NextPage = (props) => {
   const handlePagination = (page: number) => {
     const path = router.pathname;
     const query = router.query;
+
     setPage(page);
     query.page = page.toString();
     router.push({
@@ -84,56 +109,100 @@ const Home: NextPage = (props) => {
       query: query,
     });
   };
-  console.log("characters", characters);
-  if (error)
-    return <Error statusCode={error.statusCode} message={error.message} />;
+
+  const filter = () => {
+    const path = router.pathname;
+    const query = router.query;
+
+    if (searchValue) query.name = searchValue.toString();
+    if (gender) query.gender = gender.toString();
+    if (status) query.status = status.toString();
+    if (species) query.species = species.toString();
+    query.page = "1";
+    router.push({
+      pathname: path,
+      query: query,
+    });
+    resetValue();
+  };
+
+  const resetValue = () => {
+    setPage(1);
+    setSearchvalue("");
+    setGender("");
+    setStatus("");
+    setSpecies("");
+  };
+
+  const resetFilter = () => {
+    const path = router.pathname;
+    let query = router.query;
+    resetValue();
+    query = { page: page.toString() };
+    router.push({
+      pathname: path,
+      query: query,
+    });
+  };
+
+  if (statusCode != 200)
+    return <Error statusCode={statusCode} message={errorMessage} />;
   return (
     <div className={"col bg-white mx-3 p-3 rounded-3"}>
       <Head>
-        <title>Create Next App</title>
-        <meta name="description" content="Generated by create next app" />
+        <title>Character</title>
+        <meta name="description" content="Character Page" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <span>{searchValue}</span>
+      {/* filter panel */}
       <div className="d-flex my-3">
-        <div className="col-3">
+        <div className="col-2 mx-1">
           <Dropdown
-            placeholder="React Select"
-            options={[
-              { value: "Rock" },
-              { value: "Paper" },
-              { value: "Scissors" },
-            ]}
+            placeholder="Species"
+            options={enumToArray(Species)}
+            value={species}
             onChange={(item: any) => {
-              console.log("onchange--", item);
+              setSpecies(item);
             }}
           />
         </div>
-        <div className="col-3">
+        <div className="col-2 mx-1">
           <Dropdown
-            placeholder="React Select"
-            options={[
-              { value: "Rock" },
-              { value: "Paper" },
-              { value: "Scissors" },
-            ]}
+            placeholder="Status"
+            options={enumToArray(StatusType)}
+            value={species}
             onChange={(item: any) => {
-              console.log("item", item);
+              setStatus(item);
             }}
-            multiple
           />
         </div>
-        <div className="col-3  d-flex align-items-center">
-          <SearchBox value={searchValue} onChange={searchOnchnage} />
+        <div className="col-2 mx-1">
+          <Dropdown
+            placeholder="Gender"
+            options={enumToArray(Gender)}
+            value={gender}
+            onChange={(item: any) => {
+              setGender(item);
+            }}
+          />
+        </div>
+        <div className="col-6 mx-1 d-flex align-items-center">
+          <div className="col-8">
+            <SearchBox value={searchValue} onChange={searchOnchnage} />
+          </div>
+          <Button
+            label="Reset"
+            className="btn-outline-danger mx-2"
+            onClick={resetFilter}
+          />
           <Button
             label="Search"
-            className="btn-outline-primary mx-2"
-            onClick={() => console.log("click")}
+            className="btn-outline-primary mx-3"
+            disabled={!searchValue && !gender && !status && !species}
+            onClick={filter}
           />
         </div>
       </div>
-
       <main className="col d-flex flex-column">
         <div className="col row">
           {characters?.results?.map((character: any) => (
@@ -144,9 +213,9 @@ const Home: NextPage = (props) => {
         </div>
         <div className="d-flex justify-content-center my-3">
           <Pagination
-            totalCount={characters?.info?.count}
-            currentPage={page}
-            returnCurrentPage={(pge: any) => handlePagination(pge)}
+            total={characters?.info?.pages}
+            current={page}
+            pagination={(pge: any) => handlePagination(pge)}
           />
         </div>
       </main>

@@ -1,114 +1,211 @@
-import { useEffect, useState } from "react";
+import React from "react";
 import { IPagination } from "../../../infrastructure/interface/component";
-const Pagination = ({
-  pageSize = 20,
-  totalCount = 5,
-  returnCurrentPage,
-  currentPage = 1,
-}: IPagination) => {
-  Array.from(Array(3).keys());
-  // [...Array(pageSize).keys()]
-  const [numbers, setNumbers] = useState([
-    ...Array.from(Array(pageSize).keys()),
-  ]);
 
-  useEffect(() => {
-    returnCurrentPage(numbers[1]);
-  }, [numbers]);
+const Pagination = ({ total, current, pagination }: IPagination) => {
+  const handlePagination = (current: any) => {
+    pagination(current);
+  };
+
   return (
-    <nav aria-label="Page navigation">
-      <ul className="pagination">
-        <li className="page-item">
-          <a
-            className={`page-link ${numbers[0] === 0 ? "disabled" : ""}`}
-            href="#"
-            onClick={() => {
-              setNumbers([...Array.from(Array(pageSize).keys())]);
-            }}
-          >
-            First
-          </a>
-        </li>
-        <li className="page-item">
-          <a
-            className={`page-link ${numbers[0] === 0 ? "disabled" : ""}`}
-            href="#"
-            onClick={() => {
-              setNumbers(
-                Array.from(
-                  {
-                    length: pageSize,
-                  },
-                  (v, k) => numbers[k] - pageSize
-                )
-              );
-            }}
-          >
-            Previous
-          </a>
-        </li>
-        {numbers.map((item) => (
-          <li
-            key={item}
-            className={`page-item ${currentPage === item + 1 ? "active" : ""}`}
-            onClick={() => {
-              returnCurrentPage(item + 1);
-            }}
-          >
-            <a className="page-link" href="#">
-              {item + 1}
+    <div>
+      <nav aria-label="Page navigation example">
+        <ul className="pagination">
+          <li className="page-item">
+            <a
+              className={`page-link ${
+                current === 1 ? "disabled" : current > 1 ? "" : ""
+              }`}
+              href="#"
+              onClick={() => handlePagination(current - 1)}
+            >
+              Previous
             </a>
           </li>
-        ))}
-
-        <li className="page-item">
-          <a
-            className={`page-link ${
-              numbers[numbers.length - 1] === totalCount ? "disabled" : ""
-            }`}
-            href="#"
-            onClick={() => {
-              setNumbers(
-                Array.from(
-                  {
-                    length:
-                      numbers[numbers.length - 1] + pageSize <= totalCount
-                        ? pageSize
-                        : totalCount % pageSize,
-                  },
-                  (v, k) => k + numbers[numbers.length - 1] + 1
-                )
-              );
-            }}
-          >
-            Next
-          </a>
-        </li>
-        <li className="page-item">
-          <a
-            className={`page-link ${
-              numbers[numbers.length - 1] === totalCount ? "disabled" : ""
-            }`}
-            href="#"
-            onClick={() => {
-              setNumbers(
-                Array.from(
-                  {
-                    length:
-                      numbers[numbers.length - 1] + pageSize <= totalCount
-                        ? pageSize
-                        : totalCount % pageSize,
-                  },
-                  (v, k) => totalCount - pageSize + k + 1
-                )
-              );
-            }}
-          >
-            Last
-          </a>
-        </li>
-      </ul>
-    </nav>
+          {total < 7 ? (
+            <>
+              {Array.apply(0, Array(total)).map((arr, i) => (
+                <>
+                  <li
+                    key={i}
+                    className={`page-item ${current === i + 1 ? "active" : ""}`}
+                  >
+                    <a
+                      className="page-link"
+                      href="#"
+                      onClick={() => handlePagination(i + 1)}
+                    >
+                      {i + 1}
+                    </a>
+                  </li>
+                </>
+              ))}
+            </>
+          ) : current % 5 >= 0 && current > 4 && current + 2 < total ? (
+            <>
+              <li className="page-item">
+                <a
+                  className="page-link"
+                  href="#"
+                  onClick={() => handlePagination(1)}
+                >
+                  1
+                </a>
+              </li>
+              <li className="page-item">
+                <a className="page-link disabled" href="#">
+                  ...
+                </a>
+              </li>
+              <li className="page-item">
+                <a
+                  className="page-link"
+                  href="#"
+                  onClick={() => handlePagination(current - 1)}
+                >
+                  {current - 1}
+                </a>
+              </li>
+              <li className="page-item active">
+                <a
+                  className="page-link"
+                  href="#"
+                  onClick={() => handlePagination(current)}
+                >
+                  {current}
+                </a>
+              </li>
+              <li className="page-item">
+                <a
+                  className="page-link"
+                  href="#"
+                  onClick={() => handlePagination(current + 1)}
+                >
+                  {current + 1}
+                </a>
+              </li>
+              <li className="page-item">
+                <a className="page-link disabled" href="#">
+                  ...
+                </a>
+              </li>
+              <li className="page-item">
+                <a
+                  className="page-link"
+                  href="#"
+                  onClick={() => handlePagination(total)}
+                >
+                  {total}
+                </a>
+              </li>
+            </>
+          ) : current % 5 >= 0 && current > 4 && current + 2 >= total ? (
+            <>
+              <li className="page-item">
+                <a
+                  className="page-link"
+                  href="#"
+                  onClick={() => handlePagination(1)}
+                >
+                  1
+                </a>
+              </li>
+              <li className="page-item">
+                <a className="page-link disabled" href="#">
+                  ...
+                </a>
+              </li>
+              <li
+                className={`page-item ${current === total - 3 ? "active" : ""}`}
+              >
+                <a
+                  className="page-link"
+                  href="#"
+                  onClick={() => handlePagination(total - 3)}
+                >
+                  {total - 3}
+                </a>
+              </li>
+              <li
+                className={`page-item ${current === total - 2 ? "active" : ""}`}
+              >
+                <a
+                  className="page-link"
+                  href="#"
+                  onClick={() => handlePagination(total - 2)}
+                >
+                  {total - 2}
+                </a>
+              </li>
+              <li
+                className={`page-item ${current === total - 1 ? "active" : ""}`}
+              >
+                <a
+                  className="page-link"
+                  href="#"
+                  onClick={() => handlePagination(total - 1)}
+                >
+                  {total - 1}
+                </a>
+              </li>
+              <li className={`page-item ${current === total ? "active" : ""}`}>
+                <a
+                  className="page-link"
+                  href="#"
+                  onClick={() => handlePagination(total)}
+                >
+                  {total}
+                </a>
+              </li>
+            </>
+          ) : (
+            <>
+              {Array.apply(0, Array(5)).map((arr, i) => (
+                <>
+                  <li
+                    className={`page-item ${current === i + 1 ? "active" : ""}`}
+                    key={i}
+                  >
+                    <a
+                      className="page-link"
+                      href="#"
+                      onClick={() => handlePagination(i + 1)}
+                    >
+                      {i + 1}
+                    </a>
+                  </li>
+                </>
+              ))}
+              <li className="page-item">
+                <a className="page-link disabled" href="#">
+                  ...
+                </a>
+              </li>
+              <li className="page-item">
+                <a
+                  className="page-link"
+                  href="#"
+                  onClick={() => handlePagination(total)}
+                >
+                  {total}
+                </a>
+              </li>
+            </>
+          )}
+          <li className="page-item">
+            <a
+              className={`page-link ${
+                current === total ? "disabled" : current < total ? "" : ""
+              }`}
+              href="#"
+              onClick={() => handlePagination(current + 1)}
+            >
+              Next
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
   );
 };
+
 export default Pagination;

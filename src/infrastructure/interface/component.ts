@@ -2,6 +2,7 @@ export interface IDropdownProps {
   placeholder: string;
   options: any[];
   multiple?: any;
+  value: any;
   onChange: FunctionStringCallback;
 }
 // dropdown props interface
@@ -17,10 +18,9 @@ export interface IDropdownState {
 // dropdown state interface
 
 export interface IPagination {
-  pageSize?: number;
-  totalCount: number;
-  currentPage: number;
-  returnCurrentPage: Function;
+  total: number;
+  current: number;
+  pagination: Function;
 }
 
 // Pagination props interface
@@ -36,7 +36,8 @@ export interface ISearchBox {
 export interface IButton {
   label: string;
   className?: string;
-  onClick: Function;
+  disabled?: boolean;
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 // Pagination interface

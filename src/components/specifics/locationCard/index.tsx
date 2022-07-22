@@ -28,7 +28,7 @@ const LocationCard = ({
         <div
           className={`d-flex align-items-center justify-content-center ${styles.locationBadge}`}
         >
-          <span>{type}</span>
+          <span className="text-truncate">{type}</span>
         </div>
       </div>
       <div className="mt-5">

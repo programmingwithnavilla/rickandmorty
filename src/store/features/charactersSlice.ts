@@ -28,12 +28,9 @@ const charactersSlice = createSlice({
   },
   reducers: {
     setCharacter(state: any, action: PayloadAction<ICharacters>) {
-      console.log("---state---", state);
-      console.log("----", action.payload);
       state.characterInfo = { ...action.payload };
     },
     clearCharacter(state: any) {
-      console.log("---clear---");
       state.characterInfo = { ...intialState };
     },
   },
