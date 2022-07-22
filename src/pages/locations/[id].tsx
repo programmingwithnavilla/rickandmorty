@@ -1,9 +1,11 @@
-import type { NextPage, GetServerSideProps } from "next";
 import ApiCall from "../../infrastructure/services/axios";
 import dynamic from "next/dynamic";
-import { ICharacters, IPayload } from "../../infrastructure/interface";
 import CharacterCard from "../../components/specifics/characterCard";
+import type { NextPage, GetServerSideProps } from "next";
+import { ICharacters, IPayload } from "../../infrastructure/interface";
+
 const Error = dynamic(() => import("../../components/specifics/error"));
+
 export const handler: any = (req: any, res: any) => {
   res.setHeader("Cache-Control", "s-maxage=2");
 };

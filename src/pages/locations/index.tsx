@@ -1,8 +1,8 @@
 import dynamic from "next/dynamic";
 import ApiCall from "../../infrastructure/services/axios";
 import { Ilocations, IPayload } from "../../infrastructure/interface";
-import type { NextPage } from "next";
 import { useState, FormEvent } from "react";
+import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { LocationType } from "../../utils/filterValue";
 import { enumToArray } from "../../utils/index";

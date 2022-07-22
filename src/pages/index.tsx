@@ -1,14 +1,11 @@
-import type { NextPage } from "next";
 import dynamic from "next/dynamic";
-import { useState, FormEvent, useEffect } from "react";
-import { useCookies } from "react-cookie";
-import { useRouter } from "next/router";
 import Head from "next/head";
-import { useDispatch } from "react-redux";
-import { useAppSelector, useAppDispatch } from "../hooks/redux-hooks";
 import ApiCall from "../infrastructure/services/axios";
-import { IPayload } from "../infrastructure/interface";
+import type { NextPage } from "next";
 import { Gender, Species, StatusType } from "../utils/filterValue";
+import { useState, FormEvent } from "react";
+import { useRouter } from "next/router";
+import { IPayload } from "../infrastructure/interface";
 import { enumToArray } from "../utils/index";
 
 const Dropdown = dynamic(() => import("../components/specifics/dropdown"));
@@ -89,22 +86,8 @@ const Home: NextPage = ({ payload }: any) => {
   const [gender, setGender] = useState("");
   const [status, setStatus] = useState("");
   const [species, setSpecies] = useState("");
-  const [favoriteCharacter, setFavorite] = useState("");
   const [page, setPage] = useState(1);
   const router = useRouter();
-
-  const [cookies, setCookie] = useCookies(["name"]);
-  useEffect(() => {
-    if (!cookies.name) {
-      setCookie("name", "navid");
-    }
-  }, []);
-
-  const updateMyValue = (event: FormEvent<HTMLInputElement>) => {
-    const { value } = event.currentTarget;
-    setCookie("name", value);
-    setSearchvalue("sas");
-  };
 
   const searchOnchnage = (event: FormEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;

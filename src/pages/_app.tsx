@@ -1,8 +1,5 @@
-import store from "../store";
 import Header from "../components/common/header";
 import Sidebar from "../components/common/sidebar";
-import type { AppProps } from "next/app";
-import { Provider } from "react-redux";
 import "bootstrap/dist/css/bootstrap.css";
 import "../styles/globals.css";
 
@@ -14,7 +11,6 @@ import { Cookies, CookiesProvider } from "react-cookie";
 function MyApp({ Component, pageProps, cookies }: any) {
   const isBrowser = typeof window !== "undefined";
   return (
-    // <Provider store={store}>
     <CookiesProvider cookies={isBrowser ? undefined : new Cookies(cookies)}>
       <div className="d-flex flex-column">
         <div>
@@ -26,8 +22,6 @@ function MyApp({ Component, pageProps, cookies }: any) {
         </div>
       </div>
     </CookiesProvider>
-
-    // </Provider>
   );
 }
 
