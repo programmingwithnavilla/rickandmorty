@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
@@ -12,6 +12,8 @@ import { useAppSelector, useAppDispatch } from "../hooks/redux-hooks";
 import ApiCall from "../infrastructure/services/axios";
 import { IError } from "../infrastructure/interface";
 
+const Button = dynamic(() => import("../components/specifics/button"));
+const SearchBox = dynamic(() => import("../components/specifics/searchBox"));
 const Pagination = dynamic(() => import("../components/specifics/pagination"));
 const CharacterCard = dynamic(
   () => import("../components/specifics/characterCard")
@@ -33,6 +35,7 @@ export const getServerSideProps = async (context: any) => {
     message: "",
     statusCode: 0,
   };
+
   try {
     await ApiCall({
       url: `character/?page=${query.page || 1}&name=&status=&gender=&species`,
@@ -44,7 +47,6 @@ export const getServerSideProps = async (context: any) => {
         error.statusCode = status;
         error.message = statusText;
       });
-    console.log("result---", result);
     return {
       props: {
         characters: result,
@@ -64,9 +66,14 @@ const Home: NextPage = (props) => {
   const dispatch = useAppDispatch();
   const test: any = useAppSelector(selectCharacter);
   const [name, setName] = useState("a");
+  const [searchValue, setSearchvalue] = useState("");
   const [page, setPage] = useState(1);
   const router = useRouter();
 
+  const searchOnchnage = (event: FormEvent<HTMLInputElement>) => {
+    const { value } = event.currentTarget;
+    setSearchvalue(value);
+  };
   const handlePagination = (page: number) => {
     const path = router.pathname;
     const query = router.query;
@@ -88,30 +95,46 @@ const Home: NextPage = (props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="col d-flex flex-column">
-        {/* <Dropdown /> */}
-        {/* <div>
+      <span>{searchValue}</span>
+      <div className="d-flex my-3">
+        <div className="col-3">
           <Dropdown
-            label={"React Select"}
-            placeholder="Pick one"
+            placeholder="React Select"
             options={[
               { value: "Rock" },
               { value: "Paper" },
               { value: "Scissors" },
             ]}
+            onChange={(item: any) => {
+              console.log("onchange--", item);
+            }}
           />
-          <span style={{ display: "inline-block", width: 20 }} />
+        </div>
+        <div className="col-3">
           <Dropdown
-            label="React Multiple Select"
-            placeholder="Pick some"
+            placeholder="React Select"
             options={[
               { value: "Rock" },
               { value: "Paper" },
               { value: "Scissors" },
             ]}
+            onChange={(item: any) => {
+              console.log("item", item);
+            }}
             multiple
           />
-        </div> */}
+        </div>
+        <div className="col-3  d-flex align-items-center">
+          <SearchBox value={searchValue} onChange={searchOnchnage} />
+          <Button
+            label="Search"
+            className="btn-outline-primary mx-2"
+            onClick={() => console.log("click")}
+          />
+        </div>
+      </div>
+
+      <main className="col d-flex flex-column">
         <div className="col row">
           {characters?.results?.map((character: any) => (
             <div className="col-md-4 my-2" key={character.id}>

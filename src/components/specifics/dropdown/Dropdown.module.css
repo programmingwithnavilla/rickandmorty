@@ -13,9 +13,6 @@
 .select:focus {
   outline: 0;
 }
-.select:focus .selection {
-  box-shadow: 0 0 1px 1px #00a9e0;
-}
 
 .label {
   display: block;
@@ -60,7 +57,7 @@
 
 .arrow {
   position: absolute;
-  top: 5px;
+  top: 8px;
   right: 5px;
   display: block;
   padding: 10px;
@@ -76,6 +73,7 @@
   border: solid #ddd;
   border-width: 0 1px;
   background: #fff;
+  z-index: 1000;
 }
 
 .option {
@@ -84,7 +82,7 @@
   cursor: pointer;
 }
 .option.selected {
-  border: 1px solid #00a9e0;
+  border: 1px solid #ddd;
   margin: -1px -1px 0;
   background: #d9f2fb;
 }

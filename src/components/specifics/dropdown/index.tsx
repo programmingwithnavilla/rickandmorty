@@ -65,7 +65,7 @@ class Dropdown extends Component<IDropdownProps, any> {
   };
 
   onKeyDown = (e: any) => {
-    const { options, multiple }: any = this.props;
+    const { options, multiple, onChange }: any = this.props;
     const { isOpen }: any = this.state;
 
     switch (e.key) {
@@ -86,7 +86,6 @@ class Dropdown extends Component<IDropdownProps, any> {
                 } else {
                   values.splice(index, 1);
                 }
-
                 return { values };
               }
             });
@@ -124,6 +123,7 @@ class Dropdown extends Component<IDropdownProps, any> {
                 focusedValue,
               };
             } else {
+              onChange(options[focusedValue].value);
               return {
                 values: [options[focusedValue].value],
                 focusedValue,
@@ -145,6 +145,7 @@ class Dropdown extends Component<IDropdownProps, any> {
                 focusedValue,
               };
             } else {
+              onChange(options[focusedValue].value);
               return {
                 values: [options[focusedValue].value],
                 focusedValue,
@@ -156,14 +157,6 @@ class Dropdown extends Component<IDropdownProps, any> {
       default:
         if (/^[a-z0-9]$/i.test(e.key)) {
           const char = e.key;
-
-          //   clearTimeout(this.timeout);
-          //   this.timeout = setTimeout(() => {
-          //     this.setState({
-          //       typed: "",
-          //     });
-          //   }, 1000);
-
           this.setState((prevState: any) => {
             const typed = prevState.typed + char;
             const re = new RegExp(`^${typed}`, "i");
@@ -203,13 +196,13 @@ class Dropdown extends Component<IDropdownProps, any> {
 
   onDeleteOption = (e: any) => {
     const { value } = e.currentTarget.dataset;
-
+    const { onChange }: any = this.props;
     this.setState((prevState: any) => {
       const [...values] = prevState.values;
       const index = values.indexOf(value);
 
       values.splice(index, 1);
-
+      onChange(values);
       return { values };
     });
   };
@@ -226,12 +219,11 @@ class Dropdown extends Component<IDropdownProps, any> {
   };
 
   onClickOption = (e: any) => {
-    const { multiple }: any = this.props;
-
+    const { multiple, onChange }: any = this.props;
     const { value } = e.currentTarget.dataset;
-
     this.setState((prevState: any) => {
       if (!multiple) {
+        onChange(value);
         return {
           values: [value],
           isOpen: false,
@@ -246,7 +238,7 @@ class Dropdown extends Component<IDropdownProps, any> {
       } else {
         values.splice(index, 1);
       }
-
+      onChange(values);
       return { values };
     });
   };
@@ -327,7 +319,6 @@ class Dropdown extends Component<IDropdownProps, any> {
   };
 
   render() {
-    const { label }: any = this.props;
     const { isOpen }: any = this.state;
 
     return (
@@ -338,8 +329,7 @@ class Dropdown extends Component<IDropdownProps, any> {
         onBlur={this.onBlur}
         onKeyDown={this.onKeyDown}
       >
-        <label className={`${styles.label}`}>{label}</label>
-        <div className={`${styles.selection}`} onClick={this.onClick}>
+        <div className={`${styles.selection} rounded-3`} onClick={this.onClick}>
           {this.renderValues()}
           <span className={`${styles.arrow}`}>
             {isOpen ? <ChevronUp /> : <ChevronDown />}
