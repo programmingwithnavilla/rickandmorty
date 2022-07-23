@@ -14,12 +14,13 @@ const ApiCall = async ({
     url: "https://rickandmortyapi.com/api/" + url,
     body,
   };
+
   return axios(options)
-    .then(function (response) {
+    .then((response) => {
       return response.data;
     })
-    .catch(function (error) {
-      console.log("--------Show error notification!--------");
+    .catch((error) => {
+      console.log("--------Show error notification!--------", error.response);
       return Promise.reject(error.response);
     });
 };

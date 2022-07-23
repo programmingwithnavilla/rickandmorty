@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { IButton } from "../../../infrastructure/interface/component";
 
 const Button = ({
@@ -17,4 +17,4 @@ const Button = ({
   </button>
 );
 
-export default Button;
+export default memo(Button);

@@ -320,7 +320,6 @@ class Dropdown extends Component<IDropdownProps, any> {
 
   render() {
     const { isOpen }: any = this.state;
-
     return (
       <div
         className={`${styles.select}`}

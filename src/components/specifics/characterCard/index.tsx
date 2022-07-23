@@ -1,6 +1,6 @@
 import BookMark from "../../../assets/icons/bookmark";
 import styles from "./CharacterCard.module.css";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import { useCookies } from "react-cookie";
 import { ICharacters } from "../../../infrastructure/interface";
 
@@ -76,4 +76,4 @@ const CharacterCard = ({
   );
 };
 
-export default CharacterCard;
+export default memo(CharacterCard);

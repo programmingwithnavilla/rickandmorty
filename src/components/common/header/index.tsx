@@ -10,9 +10,6 @@ const Header = (props: any) => {
   const resetCookie = () => {
     setCookie("favorite", {});
   };
-  useEffect(() => {
-    console.log("cookies changed");
-  }, [cookies]);
   return (
     <header className=" d-flex align-items-center justify-content-between py-2 px-4">
       <Logo />
