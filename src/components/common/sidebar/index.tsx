@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import HomeIcon from "../../../assets/icons/homeIcon";
 import LocationIcon from "../../../assets/icons/locationIcon";
 import style from "./Sidebar.module.css";
@@ -11,14 +12,18 @@ const Sidebar = () => {
       id="sidebar"
       className={`d-flex flex-column align-items-center ${style["app-sidebar"]}`}
     >
-      <a href="/" className={`${style["siderbar-link"]}`}>
-        <HomeIcon color={router.pathname === "/" ? "#0a58ca" : "#000"} />
-      </a>
-      <a href="/locations" className={`${style["siderbar-link"]}`}>
-        <LocationIcon
-          color={router.pathname === "/locations" ? "#0a58ca" : "#000"}
-        />
-      </a>
+      <Link href="/">
+        <a className={`${style["siderbar-link"]}`}>
+          <HomeIcon color={router.pathname === "/" ? "#0a58ca" : "#000"} />
+        </a>
+      </Link>
+      <Link href="/locations">
+        <a className={`${style["siderbar-link"]}`}>
+          <LocationIcon
+            color={router.pathname === "/locations" ? "#0a58ca" : "#000"}
+          />
+        </a>
+      </Link>
     </aside>
   );
 };
